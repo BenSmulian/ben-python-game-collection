@@ -114,19 +114,20 @@ def open_terminal(*args):
 
 def get_github_directory_children(owner, repo, subdirectory_path):
     # Construct the GitHub API endpoint for the specific path
-    url = f"https://github.com/{owner}/{repo}/blob/{subdirectory_path}"
+    url = f"https://api.github.com/repos/{owner}/{repo}/contents/{subdirectory_path}"
     
     # GitHub API requires a User-Agent header
     req = urllib.request.Request(url, headers={"User-Agent": "Python-Script"})
     
     try:
         with urllib.request.urlopen(req) as response:
+            
             items = json.loads(response.read().decode())
             
-            #print(f"Children of '{subdirectory_path}' in {owner}/{repo}:\n" + "-"*50)
+            # print(f"Children of '{subdirectory_path}' in {owner}/{repo}:\n" + "-"*50)
 
             items = [item["name"].replace(".py", "") for item in items if item["type"] != "dir"]
-
+            
             return items
                     
     except urllib.error.HTTPError as e:
@@ -152,7 +153,7 @@ def choose_game():
     chosen_game_index = input(question + "\n")
 
     try:
-        if len(game_names) > int(chosen_game_index)-1 and int(chosen_game_index)-1 < 0:
+        if len(game_names) > int(chosen_game_index)-1 and int(chosen_game_index)-1 >= 0:
             return game_names[int(chosen_game_index)-1]
     except:
         return None
@@ -171,7 +172,8 @@ def chooose_option():
             return "error"
 
 def download_github_file(owner, repo, file_path, save_directory=".", branch="main"):
-    url = f"https://githubusercontent.com{owner}/{repo}/{branch}/{file_path}"
+    url = f"https://raw.githubusercontent.com/{owner}/{repo}/refs/heads/{branch}/{file_path}"
+    # https://raw.githubusercontent.com/BenSmulian/ben-python-game-collection/refs/heads/main/main.py
     
     local_filename = Path(file_path).name
     destination_path = Path(save_directory) / local_filename
@@ -202,18 +204,18 @@ def download_github_file(owner, repo, file_path, save_directory=".", branch="mai
         return False
 
 def choose_install():
-    game_names = get_github_directory_children("BenSmulian", "ben-python-game-collection", "main/games/")
+    game_names = get_github_directory_children("BenSmulian", "ben-python-game-collection", "games")
 
     question = "choose a game from the fallowing to install: "
 
     for i, game_name in enumerate(game_names):
         question += "\n" + str(i+1) + ". " + game_name
 
-    chosen_game_name = ""
+    chosen_game_name = input(question + "\n")
 
     try:
-        if len(game_names) > int(chosen_game_index)-1 and int(chosen_game_index)-1 < 0:
-            chosen_game_name = game_names[int(chosen_game_index)-1]
+        if len(game_names) > int(chosen_game_name)-1 and int(chosen_game_name)-1 >= 0:
+            chosen_game_name = game_names[int(chosen_game_name)-1]
         else:
             return None
 
@@ -221,8 +223,8 @@ def choose_install():
         return None
 
     print("started downloading " + chosen_game_name + "...")
-    download_github_file("BenSmulian", "ben-python-game-collection", "main/games/" + chosen_game_name)
-    print(chosen_game_name + " is ready to play!")
+    if download_github_file("BenSmulian", "ben-python-game-collection", "games/" + chosen_game_name +".py", save_directory="./games/"):
+        print(chosen_game_name + " is ready to play!")
 
 is_windows = os.name == "nt"
 
@@ -251,10 +253,10 @@ def main():
                         # Passing shell=True allows Python to call the native 'start' mechanism directly
                         subprocess.run(f'start cmd /k "{cmd_payload}"', shell=True)
                     else:
-                        open_terminal("SCRIPT_DIR=$SCRIPT_DIR", "&&", "cd $SCRIPT_DIR", "&&", f"source {Path("./venv/bin/activate")}", "&&", f"python3 ./games/{chosen_game}")
-            
+                        open_terminal("SCRIPT_DIR=$(cd \"$(dirname \"$0\")\" && pwd) cd \"$SCRIPT_DIR\"", "&&", "source \"./venv/bin/activate\"", "&&", f"python3 \"./games/{chosen_game}\"")
+
+
             case "install":
                 choose_install()
-
 if __name__ == "__main__":
     main()
