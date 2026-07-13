@@ -1,13 +1,10 @@
 from pathlib import Path
 import shutil, json, os, urllib, subprocess
+from urllib import urllib
 
 games_path = Path("./games")
 
 # --- Linux/Mac Only Stuff ---
-import json
-import shutil
-import subprocess
-from pathlib import Path
 
 # Ordered from most powerful/modern to simplest/fallback
 terminals = [
