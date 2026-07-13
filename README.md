@@ -10,13 +10,13 @@ This is a library containing python games that I have made which should be ran u
     2. if -
        (for all options, change `your_file_name` to the exact name of the downloaded file without the extention afterwards)
       - logged in to a user, execute the fallowing command:
-       ``sh
+       ```sh
        sudo chmod +x "your_file_name.sh"
-       ``, then type your user password.
+       ```, then type your user password.
       - logged in as root, execute the fallowing command:
-       ``sh
+       ```sh
        chmod +x "your_file_name.sh"
-       `` (without sudo)
+       ``` (without sudo)
     > Note that for Mac sudo is not needed anyways.
   - On Windows:
     1. double click the file and continue the execution every time windows tells you to stop it if it does.
