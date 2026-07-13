@@ -1,6 +1,5 @@
 from pathlib import Path
-import shutil, json, os
-import subprocess
+import shutil, json, os, urllib, subprocess
 
 games_path = Path("./games")
 
