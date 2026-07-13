@@ -114,7 +114,7 @@ def open_terminal(*args):
 
 def get_github_directory_children(owner, repo, subdirectory_path):
     # Construct the GitHub API endpoint for the specific path
-    url = f"https://github.com{owner}/{repo}/contents/{subdirectory_path}"
+    url = f"https://github.com/{owner}/{repo}/blob/{subdirectory_path}"
     
     # GitHub API requires a User-Agent header
     req = urllib.request.Request(url, headers={"User-Agent": "Python-Script"})
