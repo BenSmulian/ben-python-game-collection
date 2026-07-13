@@ -1,6 +1,7 @@
 from pathlib import Path
 import shutil, json, os, urllib, subprocess
-from urllib import urllib
+import urllib.request
+import urllib.error
 
 games_path = Path("./games")
 
